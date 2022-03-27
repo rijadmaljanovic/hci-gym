@@ -1,0 +1,111 @@
+<nav class="navbar" style="background-color: white; border-style: groove;">
+    <div class="container-fluid">
+      <h4 style="color: red; width: 10px;">HCI</h4>
+        <h5 style="color: red">Administrator</h5>
+        <div class="d-flex">
+          <button style="color: red;" (click)="products()" type="button"  class="btn btn-outline">Products overview</button>
+            <button style="color: red;" (click)="home()" type="button"  class="btn btn-outline">Home</button>
+            <button style="color: red;" (click)="account()" type="button"  class="btn btn-outline">Account</button>
+            <button style="color: red;" (click)="logOut()" type="button"  class="btn btn-outline">Log out</button>
+        </div>
+    </div>
+    
+</nav>
+
+<div style="width: 20%; margin: 10px;" class="input-group">
+  <input type="text" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" [(ngModel)]="searchEmployee"  />
+  <button type="button" class="btn btn-outline-primary"  (click)="Search()">Search</button>
+  
+</div>
+<div style="width: 20%; margin: 10px;" class="input-group">
+  <button (click)="clickAddEmployee()" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-secondary">Dodaj zaposlenika</button>
+  
+</div>
+<div style="height: 100%;"  id="container">
+<table style="text-align: center;" class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Ime</th>
+            <th scope="col">Jmbg</th>
+            <th scope="col">Email</th>
+            <th scope="col">Počeo/la godine</th>
+            <th scope="col">Aktivan</th>
+            <th scope="col">Kategorija</th>
+            <th scope="col">Akcija</th>
+        </tr>
+    </thead>
+    <tbody> 
+        <tr *ngFor="let row of employeeData">
+            <td>{{row.ime}}</td>
+            <td>{{row.jmbg}}</td>
+            <td><a href="{{row.adresa}}">{{row.adresa}}</a></td>
+            <td>{{row.godinaZaposlenja}}</td>
+            <td *ngIf="row.aktivan==false" ><img class="icon" src="assets/x-icon.png" alt=""></td>
+            <td *ngIf="row.aktivan==true" ><img class="icon" src="assets/checkmark-icon.png" alt=""></td>
+            <td *ngIf="row.kategorijaId==1">Član</td>
+            <td *ngIf="row.kategorijaId==2">Trener</td>
+            <td *ngIf="row.kategorijaId==3">Recepcioner</td>
+            <td *ngIf="row.kategorijaId==4">Menadzer</td>
+            <td>
+                <button (click)="onEdit(row)" style="width:80px;" class="btn btn-outline-primary"type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Uredi</button>
+                <button (click)="deleteEmployee(row)" style="width:80px;" class="btn btn-danger mx-3">Obrisi</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Dodaj/Uredi zaposlenika</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="formValue">
+                <div class="mb-3">
+                  <label for="exampleInputName" class="form-label">Ime</label>
+                  <input type="text" formControlName="ime" class="form-control" >
+                  
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputArtist" class="form-label">Jmbg</label>
+                  <input type="text" formControlName="jmbg" class="form-control" >
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputUrl" class="form-label">Email</label>
+                    <input type="text" formControlName="adresa" class="form-control" >
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputRating" class="form-label">Godina zaposlenja</label>
+                    <input type="text" formControlName="godinaZaposlenja" class="form-control" >
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="exampleInputCategory" class="form-label">Kategorija: </label>
+                    <select  formControlName="kategorijaId" >
+                      <option  *ngFor="let id of SelectCategory" [value]="id.id">
+                       <a *ngIf="id.id==1">Član</a> 
+                       <a *ngIf="id.id==2">Trener</a> 
+                       <a *ngIf="id.id==3">Recepcioner</a> 
+                       <a *ngIf="id.id==4">Menadzer</a> 
+                      </option>
+                    </select>
+                  </div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" (change)="checkfalse = !checkfalse" class="form-check-input" formControlName="aktivan">
+                  <label class="form-check-label"   >Aktivan</label>
+                </div>
+
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
+          <button type="button" *ngIf="showAdd" (click)="postEmployeeDetails()" class="btn btn-primary">Dodaj</button>
+          <button type="button" *ngIf="showUpdate" (click)="updateEmployeeDetails()" class="btn btn-primary">Uredi</button>
+        </div>
+      </div>
+    </div>
+  </div>
